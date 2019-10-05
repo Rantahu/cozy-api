@@ -39,7 +39,37 @@ class Board(models.Model):
             Args:
                 self: current instance of that object
         """
-        return self.thread.order_by('created').last()
+        return self.threads.order_by('created').last()
+
+    @property
+    def activeThreads(self):
+        """
+            This function returns back a list of active threads from a specific board
+
+            Args
+                self: current instance of the object
+        """
+        return self.threads.filter(status = 'active')
+
+    @property
+    def lockedThreads(self):
+        """
+            This function returns back a list of locked threads from a specific board
+
+            Args:
+                Self: current instance of the object
+        """
+        return self.threads.filter(status = 'locked')
+
+    @property
+    def archivedThreads(self):
+        """
+            This function returns back a list of archived threads from a specific board
+
+            Args:
+                self: current instance of the object
+        """
+        return self.threads.filter(status = 'archived')
 
 
 
@@ -64,6 +94,17 @@ class Thread(models.Model):
                     the thread
             bid: reference to the first post in the bid
     """
+    ACTIVE = 'active'
+    LOCKED = 'locked'
+    ARCHIVED = 'archived'
+
+    STATUSES = [
+        (ACTIVE, 'active'),
+        (LOCKED, 'locked'),
+        (ARCHIVED, 'archived')
+    ]
+
+
     title = models.CharField(max_length=250, db_index=True)
     created = models.DateTimeField(auto_now = True)
     board = models.ForeignKey(Board, related_name='threads', on_delete=models.CASCADE)
@@ -73,6 +114,8 @@ class Thread(models.Model):
     latestReplyTime = models.DateTimeField(auto_now = True)
     poster = models.ForeignKey(Profile, on_delete=models.CASCADE)
     image = models.ImageField(blank = True, default='',null=True)
+    status = models.CharField(max_length = 20, choices = STATUSES, default = ACTIVE)
+
 
 
     @property
@@ -109,6 +152,7 @@ class Thread(models.Model):
             slug = slug.lower()
             slug = slug.replace(" ", "-")
             self.slug = slug
+            self.status = ACTIVE
 
         if self.pk:
             self.latestReplyTime = datetime.now

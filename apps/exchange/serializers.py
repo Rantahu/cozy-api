@@ -86,7 +86,7 @@ class ItemCreateUpdateSerializer(ModelSerializer):
             'description',
             'material',
             'category',
-            'image'
+            'primaryImage'
         ]
 
 class ItemDetailSeralizer(ModelSerializer):

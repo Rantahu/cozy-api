@@ -74,6 +74,59 @@ class BoardDetail(RetrieveAPIView):
     permission_classes = [AllowAny]
     lookup_field = 'tag'
 
+class BoardActiveDetail(RetrieveAPIView):
+    """
+        This view is for the API get request to return the details of
+        a board with all of its activethreads
+
+        Attributes:
+            queryset = Query holding all of the Board objects
+            serializer_class: Using Active Threads serializer for
+            detailed information only showing with active threads
+            permission_classes: Anyone is allowed to access this call (even
+            unathenticated users)
+    """
+
+    queryset = Board.objects.all()
+    serializer_class = BoardActiveThreadsSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'tag'
+
+class BoardLockedDetail(RetrieveAPIView):
+    """
+        This view is for the API get request to return the details of
+        a board with all of its locked threads
+
+        Attributes:
+            queryset = Query holding all of the Board objects
+            serializer_class: Using Locked Threads serializer for
+            detailed information only showing with active threads
+            permission_classes: Anyone is allowed to access this call (even
+            unathenticated users)
+    """
+
+    queryset = Board.objects.all()
+    serializer_class = BoardLockedThreadsSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'tag'
+
+class BoardArchivedeDetail(RetrieveAPIView):
+    """
+        This view is for the API get request to return the details of
+        a board with all of its archived threads
+
+        Attributes:
+            queryset = Query holding all of the Board objects
+            serializer_class: Using Archived Threads serializer for
+            detailed information only showing with active threads
+            permission_classes: Anyone is allowed to access this call (even
+            unathenticated users)
+    """
+
+    queryset = Board.objects.all()
+    serializer_class = BoardArchivedThreadsSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'tag'
 
 class BoardCreate(CreateAPIView):
     """
@@ -102,9 +155,22 @@ class ThreadCreate(CreateAPIView):
             threads.
     """
     queryset = Post.objects.all()
-    serializer_class = ThreadCreateUpdateSerializer
+    serializer_class = ThreadCreateSerializer
     permission_classes = [IsAuthenticated]
 
+class ThreadUpdate(UpdateAPIView):
+    """
+        This view is for the API post request to update a thread.
+
+        Attributes:
+            queryset: Query that holds all of the Thread Objects
+            serializer_class: The Thread update serailizer which is used so Admin users
+            can update threads
+            permission_classes: Only admins are allowed to update threads.
+    """
+    queryset = Thread.objects.all()
+    serializer_class = ThreadUpdateSerializer
+    permission_classes = [IsAdminUser]
 
 class ThreadDetail(RetrieveAPIView):
     """
