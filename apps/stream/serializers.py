@@ -24,7 +24,6 @@ class StreamCreateUpdateSerializer(ModelSerializer):
             'title',
             'description',
             'channel',
-            'service',
             'live'
         ]
 
@@ -37,7 +36,6 @@ class StreamDetailSerializer(ModelSerializer):
             'title',
             'description',
             'channel',
-            'service',
             'live',
             'viewers',
             'featured',
@@ -51,7 +49,6 @@ class StreamListSerializer(ModelSerializer):
         fields = [
             'id',
             'title',
-            'service',
             'live',
             'viewers',
             'streamer'

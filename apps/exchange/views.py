@@ -33,21 +33,11 @@ from rest_framework.permissions import (
     )
 
 from .serializers import *
-from apps.services.serializers import ServiceDetailSerializer
-from apps.services.models import Service
+
 
 #------------------------------------------------------------------------------
 #Category
 #------------------------------------------------------------------------------
-class ExchangeService(APIView):
-    def get(self,request):
-        service = Service.objects.get(service="exchange")
-
-        service_serializer=ServiceDetailSerializer(service)
-
-        return Response({
-            'service':service_serializer.data
-        })
 
 
 class CategoryList(ListAPIView):

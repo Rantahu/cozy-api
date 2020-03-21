@@ -9,7 +9,7 @@ router.register('images', views.ItemImageViewset, 'images')
 
 
 urlpatterns = [
-    url(r'^info/$', views.ExchangeService.as_view()),
+    
     url(r'^category/$', views.CategoryList.as_view()),
  	url(r'^category/(?P<pk>[0-9]+)/$', views.CategoryDetail.as_view()),
     url(r'^item/$', views.ItemList.as_view()),

@@ -19,10 +19,22 @@ class Stream(models.Model):
         live: boolean if the stream is live or not
         viewers: integer that holds the amount of current viewers
     """
+    YOUTUBE = 'Youtube'
+    TWITCH = 'Twitch'
+    ANGELTHUMP = 'Angelthump'
+
+
+    SERVICES = [
+        (YOUTUBE, 'YouTube'),
+        (TWITCH, 'Twitch'),
+        (ANGELTHUMP, "Angelthump")
+    ]
+
+
     title = models.CharField(max_length = 100, default = 'New Stream')
     description = models.TextField()
     channel = models.CharField(max_length = 100, blank = True)
-    service = models.CharField(max_length = 100, blank = True)
+    service = models.CharField(max_length = 100, choices = SERVICES, blank = True)
     live = models.BooleanField(default = False)
     featured = models.BooleanField(default = False)
     viewers = models.PositiveIntegerField(default = 0)

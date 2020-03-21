@@ -6,9 +6,8 @@ from rest_framework import routers
 
 urlpatterns = [
     url(r'^list$', views.BoardList.as_view()),
-    url(r'^info$', views.BoardService.as_view()),
-    url(r'^board/(?P<tag>[\w\-]+)/$', views.BoardDetail.as_view()),
-    url(r'^board/(?P<tag>[\w\-]+)/active$', views.BoardActiveDetail.as_view()),
+    url(r'^board/(?P<tag>[\w\-]+)/$', views.BoardActiveDetail.as_view()),
+    url(r'^board/(?P<tag>[\w\-]+)/fulldetail$', views.BoardDetail.as_view()),
     url(r'^board/(?P<tag>[\w\-]+)/locked$', views.BoardLockedDetail.as_view()),
     url(r'^board/(?P<tag>[\w\-]+)/archived$', views.BoardArchivedeDetail.as_view()),
     url(r'^board/create$', views.BoardCreate.as_view()),

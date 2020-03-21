@@ -27,7 +27,6 @@ boards_name = apps.get_app_config('boards').verbose_name
 exchange_name = apps.get_app_config('exchange').verbose_name
 accounts_name = apps.get_app_config('accounts').verbose_name
 stream_name = apps.get_app_config('stream').verbose_name
-services_name = apps.get_app_config('services').verbose_name
 
 from apps.boards import views as boards_views
 
@@ -37,8 +36,7 @@ urlpatterns = [
     url(r'^boards/', include(('apps.boards.urls', boards_name), namespace='boards')),
     url(r'^exchange/', include(('apps.exchange.urls', exchange_name), namespace='exchange')),
     url(r'^stream/', include(('apps.stream.urls', stream_name), namespace='stream')),
-    url(r'^', include(('apps.accounts.urls', accounts_name), namespace='accounts')),
-    url(r'^', include(('apps.services.urls', services_name), namespace='service')),
+    url(r'^', include(('apps.accounts.urls', accounts_name), namespace='accounts'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

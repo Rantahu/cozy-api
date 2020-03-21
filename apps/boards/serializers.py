@@ -42,6 +42,7 @@ class PostDetailSerializer(ModelSerializer):
             'poster',
             'message',
             'image'
+
         ]
 
         def get_image(self,obj):
@@ -73,7 +74,7 @@ class ThreadCreateSerializer(ModelSerializer):
             'message',
             'poster',
             'image',
-            'board'
+            'board',
         ]
 
 class ThreadUpdateSerializer(ModelSerializer):
@@ -85,7 +86,7 @@ class ThreadUpdateSerializer(ModelSerializer):
             'poster',
             'image',
             'board',
-            'status'
+            'status',
         ]
 
 class ThreadDetailSerializer(ModelSerializer):
@@ -104,13 +105,12 @@ class ThreadDetailSerializer(ModelSerializer):
             'blurb',
             'board',
             'replyCount',
-            'latestReplyTime',
+            'updated',
             'views',
             'imageCount',
             'posts',
             'image',
-            'status'
-
+            'status',
         ]
 
         def get_image(self,obj):
@@ -138,7 +138,7 @@ class ThreadListSerializer(ModelSerializer):
             'created',
             'poster',
             'board',
-            'image'
+            'image',
 
         ]
 
@@ -155,12 +155,12 @@ class BoardListSerializer(ModelSerializer):
         model = Board
         fields = [
             'name',
-            'tag'
+            'tag',
+            'nsfw'
         ]
 
 class BoardDetailSerializer(ModelSerializer):
     threads = ThreadListSerializer(many=True, read_only=True)
-    activeThreads = ThreadListSerializer(many=True, read_only=True)
     latestPost = ThreadDetailSerializer(read_only = True)
     lookup_field = 'tag'
     class Meta:
@@ -169,8 +169,9 @@ class BoardDetailSerializer(ModelSerializer):
             'name',
             'tag',
             'threads',
-            'latestPost',
-            'activeThreads'
+            'nsfw',
+            'latestPost'
+
         ]
 class BoardActiveThreadsSerializer(ModelSerializer):
     activeThreads = ThreadListSerializer(many=True, read_only=True)
@@ -179,39 +180,38 @@ class BoardActiveThreadsSerializer(ModelSerializer):
     class Meta:
         model = Board
         fields = [
-            'id',
             'name',
             'tag',
             'latestPost',
-            'activeThreads'
+            'nsfw',
+            'activeThreads',
+
         ]
 
 class BoardLockedThreadsSerializer(ModelSerializer):
     lockedThreads = ThreadListSerializer(many=True, read_only=True)
-    latestPost = ThreadDetailSerializer(read_only = True)
     lookup_field = 'tag'
     class Meta:
         model = Board
         fields = [
-            'id',
             'name',
             'tag',
-            'latestPost',
+            'nsfw',
             'lockedThreads'
+
         ]
-        
+
 class BoardArchivedThreadsSerializer(ModelSerializer):
     archivedThreads = ThreadListSerializer(many=True, read_only=True)
-    latestPost = ThreadDetailSerializer(read_only = True)
     lookup_field = 'tag'
     class Meta:
         model = Board
         fields = [
-            'id',
             'name',
             'tag',
-            'latestPost',
+            'nsfw',
             'archivedThreads'
+
         ]
 
 class BoardCreateUpdateSerializer(ModelSerializer):

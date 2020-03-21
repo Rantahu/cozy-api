@@ -11,7 +11,7 @@ class Board(models.Model):
     """This is a class for the Board Object
         Attributes:
             name: A string that holds the name of the board
-            tag: A string that holds the abbreviation of the board
+            tag: A string that holds the abbreviation of the board (index in the db)
             lastUpdated: A DateTime that stores the last time a post was contributed
                     to.
             nextBid: An integer field used to count the amount of posts on a board
@@ -22,6 +22,8 @@ class Board(models.Model):
     name = models.CharField(max_length=50, db_index=True, unique=True)
     tag = models.CharField(primary_key=True, max_length=4, db_index=True)
     nextBid = models.PositiveIntegerField(default = 0)
+    activeThreadCount = models.PositiveIntegerField(default = 0)
+    nsfw = models.BooleanField(default = False)
 
     def __str__(self):
         return self.name
@@ -71,6 +73,20 @@ class Board(models.Model):
         """
         return self.threads.filter(status = 'archived')
 
+    def archiveLeastActiveThread(self):
+        """
+            This function doesn't return anything. It only updates the least active thread
+            and changes its status to archived, this is so we can make more room for active
+            threads.
+
+            Args:
+                self: current instance of the object.
+
+        """
+        laThread = self.threads.order_by('latestReplyTime').first()
+        laThread.status = ('archived')
+        laThread.save()
+
 
 
 class Thread(models.Model):
@@ -111,11 +127,10 @@ class Thread(models.Model):
     replyCount = models.PositiveIntegerField(default = 0)
     views = models.PositiveIntegerField(default = 0)
     imageCount = models.PositiveIntegerField(default = 0)
-    latestReplyTime = models.DateTimeField(auto_now = True)
+    updated = models.DateTimeField(auto_now = True)
     poster = models.ForeignKey(Profile, on_delete=models.CASCADE)
     image = models.ImageField(blank = True, default='',null=True)
     status = models.CharField(max_length = 20, choices = STATUSES, default = ACTIVE)
-
 
 
     @property
@@ -152,10 +167,13 @@ class Thread(models.Model):
             slug = slug.lower()
             slug = slug.replace(" ", "-")
             self.slug = slug
-            self.status = ACTIVE
+            self.status = 'active'
+            if self.board.activeThreadCount >= 5:
+                self.board.archiveLeastActiveThread()
+            else:
+                self.board.activeThreadCount += 1
+                self.board.save()
 
-        if self.pk:
-            self.latestReplyTime = datetime.now
 
         super(Thread, self).save(**kwargs)
 
@@ -207,6 +225,7 @@ class Post(models.Model):
                 self.thread.replyCount = self.thread.replyCount + 1
                 if self.image:
                         self.thread.imageCount = self.thread.imageCount + 1
+                self.thread.latestReplyTime = datetime.now
                 self.thread.save()
 
             except:

@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     'apps.exchange',
     'apps.stream',
     'apps.boards',
-    'apps.services',
 
 ]
 

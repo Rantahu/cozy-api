@@ -28,8 +28,7 @@ from rest_framework.permissions import (
     )
 
 from .serializers import *
-from apps.services.serializers import ServiceDetailSerializer
-from apps.services.models import Service
+
 
 class BoardList(ListAPIView):
     """
@@ -45,18 +44,6 @@ class BoardList(ListAPIView):
     serializer_class = BoardListSerializer
     permission_classes = [AllowAny]
 
-class BoardService(APIView):
-    def get(self, request):
-        service = Service.objects.get(service="boards")
-        boards = Board.objects.all()
-
-        service_serializer = ServiceDetailSerializer(service)
-        board_serializer = BoardListSerializer(boards, many=True )
-
-        return Response({
-            'service':service_serializer.data,
-            'boards':board_serializer.data
-        })
 
 class BoardDetail(RetrieveAPIView):
     """
@@ -197,7 +184,7 @@ class ThreadList(ListAPIView):
 
         Attributes:
             queryset: Query that holds all Threads in the order based off their
-            latestReplyTime
+            updated
             serializer_class: The ThreadListSerializer is used
             permission_classes: anyone is allowed to call ThreadList even those
             who are not authenticated users
@@ -206,15 +193,15 @@ class ThreadList(ListAPIView):
                 poster,
                 board
                 example: http://example.com/thread/title?search=Treyway
-            ordering_fields: Allow search query to be ordered in reverse latestReplyTime
+            ordering_fields: Allow search query to be ordered in reverse updated
     """
-    queryset = Thread.objects.all().order_by('-latestReplyTime')
+    queryset = Thread.objects.all().order_by('updated')
     serializer_class = ThreadListSerializer
     permission_classes = [AllowAny]
     filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
     filterset_fields = ['board__tag']
     search_fields = ['title', 'poster__user__username', 'board__name']
-    ordering_fields = ('latestReplyTime',)
+    ordering_fields = ('updated',)
 
 
 
